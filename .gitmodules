@@ -1,0 +1,3 @@
+[submodule "mLSTM"]
+	path = mLSTM
+	url = https://github.com/williamrobotma/mLSTM.git
