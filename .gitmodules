@@ -1,0 +1,6 @@
+[submodule "mLSTM"]
+	path = mLSTM
+	url = https://github.com/williamrobotma/mLSTM.git
+[submodule "mlstm4reco"]
+	path = mlstm4reco
+	url = https://github.com/williamrobotma/mlstm4reco.git
