@@ -34,8 +34,10 @@ class MovielensDataset(torch.utils.data.Dataset):
 
             pad_to = min(self.max_seq_len, max_history_length) if max_history_length > 0 else self.max_seq_len
             self.users_history_df = self.users_history_df.applymap(np.asarray, dtype=int)#.iloc[:,0]
-            self.users_history_df = self.users_history_df.applymap(
+            self.users_history_df.movie_id = self.users_history_df.movie_id.map(
                 lambda x: np.pad(x, (pad_to - len(x), 0), 'constant', constant_values=(0,0)))
+            self.users_history_df.rating = self.users_history_df.rating.map(
+                lambda x: np.pad(x, (pad_to - len(x), 0), 'constant', constant_values=(3,3)))
         else:
             self.users_history_df = None
 
