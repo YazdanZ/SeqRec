@@ -20,7 +20,8 @@ class MovielensDataset(torch.utils.data.Dataset):
             self.users_history_df = pd.read_hdf(users_file, key='users_history')
             self.users_history_df = self.users_history_df.droplevel(0)
             # self.users_history_df = self.users_history_df[self.users_history_df['rating'] >= 4]
-            self.max_seq_len = self.users_history_df.groupby('user_id').count().max().max()
+            count = self.users_history_df.groupby('user_id').count()
+            self.max_seq_len = count.max().max()
             # self.min_seq_len = self.users_history_df.groupby('user_id').count().min().min()
             # print(self.max_seq_len, self.min_seq_len)
 
@@ -34,6 +35,9 @@ class MovielensDataset(torch.utils.data.Dataset):
 
             pad_to = min(self.max_seq_len, max_history_length) if max_history_length > 0 else self.max_seq_len
             self.users_history_df = self.users_history_df.applymap(np.asarray, dtype=int)#.iloc[:,0]
+
+            self.users_history_df['lengths_cut'] = self.users_history_df.movie_id.map(len)
+            self.users_history_df['lengths'] = count.movie_id
             self.users_history_df.movie_id = self.users_history_df.movie_id.map(
                 lambda x: np.pad(x, (pad_to - len(x), 0), 'constant', constant_values=(0,0)))
             self.users_history_df.rating = self.users_history_df.rating.map(
@@ -71,6 +75,8 @@ class MovielensDataset(torch.utils.data.Dataset):
         if self.users_history_df is not None:
             sample['user_history_rating'] = self.users_history_df.loc[user_id, 'rating']
             sample['user_history_movie_id'] = self.users_history_df.loc[user_id, 'movie_id']
+            sample['user_history_len_cut'] = self.users_history_df.loc[user_id, 'lengths_cut']
+            sample['user_history_len'] = self.users_history_df.loc[user_id, 'lengths']
  
         # TODO: Output user_info
         if self.user_info:
