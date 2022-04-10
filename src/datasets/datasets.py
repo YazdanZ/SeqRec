@@ -18,7 +18,7 @@ class MovielensDataset(torch.utils.data.Dataset):
         if user_history:
             # load user histories
             self.users_history_df = pd.read_hdf(users_file, key='users_history')
-            self.users_history_df = self.users_history_df.droplevel('user_id')
+            self.users_history_df = self.users_history_df.droplevel(0)
             # self.users_history_df = self.users_history_df[self.users_history_df['rating'] >= 4]
             self.max_seq_len = self.users_history_df.groupby('user_id').count().max().max()
             # self.min_seq_len = self.users_history_df.groupby('user_id').count().min().min()
@@ -71,11 +71,11 @@ class MovielensDataset(torch.utils.data.Dataset):
             sample['user_history_movie_id'] = self.users_history_df.loc[user_id, 'movie_id']
  
         # TODO: Output user_info
-        if self.movie_info:
+        if self.user_info:
             sample['user_info'] = self.users_df.loc[user_id].to_dict()
 
         # TODO: Output movie_info
-        if self.movies_df is not None:
+        if self.movie_info:
             sample['movie_info'] = self.movies_df.loc[movie_id].to_dict()
 
         return sample
