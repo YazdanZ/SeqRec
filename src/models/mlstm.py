@@ -39,7 +39,4 @@ class mLSTM(RNNBase):
             hx = (mx, cx)
             hx, cx = self.lstm_cell(input[:, seq, :], hx)
             steps.append(cx.unsqueeze(1))
-        # print(steps)
-        # print(steps[-1].shape)
-        # print(steps[-1])
         return torch.cat(steps, dim=1)
