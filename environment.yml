@@ -185,4 +185,3 @@ dependencies:
   - zipp=3.7.0
   - zlib=1.2.11
   - zstd=1.4.9
-prefix: /home/wma/miniconda3/envs/ECSE552proj
